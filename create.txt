@@ -1,0 +1,74 @@
+CREATE TABLE CISP (
+    RISP int not null,
+    AISP int not null,
+    ID int PRIMARY KEY
+);
+
+CREATE TABLE Bairro (
+    Nome varchar(100) not null,
+    ID int PRIMARY KEY,
+    Familias_com_PBF int not null,
+    fk_Zona_Administrativa_IPS_ID int
+);
+
+CREATE TABLE Zona_Administrativa_IPS (
+    Nome varchar(100) not null,
+    Conceito_Geral decimal(25,20) not null,
+    Oportunidades decimal(25,20) not null,
+    Necessidades_Humanas_Basicas decimal(25,20) not null,
+    ID int not null PRIMARY KEY,
+    Fundamentos_do_Bem_Estar decimal(25,20) not null
+);
+
+CREATE TABLE Ocorrencia (
+    Tipo varchar(100) not null,
+    Mes varchar(50) not null,
+    fk_CISP_ID int,
+    Quantidade int not null
+);
+
+CREATE TABLE Tipo_Familia (
+    Nome varchar(100) PRIMARY KEY,
+    Faixa_Per_Capita int not null
+);
+
+CREATE TABLE Engloba (
+    fk_Zona_Administrativa_IPS_ID int,
+    fk_CISP_ID int
+);
+
+CREATE TABLE Possui (
+    fk_Tipo_Familia_Nome varchar(100),
+    fk_Bairro_ID int,
+    Quantidade int not null
+);
+ 
+ALTER TABLE Bairro ADD CONSTRAINT FK_Bairro_2
+    FOREIGN KEY (fk_Zona_Administrativa_IPS_ID)
+    REFERENCES Zona_Administrativa_IPS (ID)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Ocorrencia ADD CONSTRAINT FK_Ocorrencia_1
+    FOREIGN KEY (fk_CISP_ID)
+    REFERENCES CISP (ID)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Engloba ADD CONSTRAINT FK_Engloba_1
+    FOREIGN KEY (fk_Zona_Administrativa_IPS_ID)
+    REFERENCES Zona_Administrativa_IPS (ID)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Engloba ADD CONSTRAINT FK_Engloba_2
+    FOREIGN KEY (fk_CISP_ID)
+    REFERENCES CISP (ID)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Possui ADD CONSTRAINT FK_Possui_1
+    FOREIGN KEY (fk_Tipo_Familia_Nome)
+    REFERENCES Tipo_Familia (Nome)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Possui ADD CONSTRAINT FK_Possui_2
+    FOREIGN KEY (fk_Bairro_ID)
+    REFERENCES Bairro (ID)
+    ON DELETE RESTRICT;
